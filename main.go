@@ -13,11 +13,11 @@ var productList []Product
 //
 //	Product Struct
 type Product struct {
-	ID          int
-	Title       string
-	Description string
-	Price       float64
-	imgUrl      string
+	ID          int     `json:"id"`
+	Title       string  `json:"title"`
+	Description string  `json:"description"`
+	Price       float64 `json:"price"`
+	imgUrl      string  `json:"imageUrl"`
 }
 
 // APIS handle function
