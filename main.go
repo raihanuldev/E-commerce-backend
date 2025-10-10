@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -26,11 +27,13 @@ func handleHello(w http.ResponseWriter, r *http.Request) {
 }
 
 // Api for Get all Products
-func getProducts(w http.ResponseWriter, r *http.Response) {
-	if r.Request.Method != "GET" {
+func getProducts(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
 		http.Error(w, "Please Sent GET Request", 400)
 		return
 	}
+	encoder := json.NewEncoder(w)
+	encoder.Encode(productList)
 
 }
 
