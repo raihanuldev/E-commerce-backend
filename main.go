@@ -40,12 +40,42 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// Create Product
+func createProduct(w http.ResponseWriter, r *http.Request) {
+	// response config
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+	//cheking if request are vaild or invaild
+	if r.Method != "POST" {
+		http.Error(w, "Please Sent POST Request", 400)
+		return
+	}
+	//catching data from request
+	var newProduct Product
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&newProduct)
+
+	if err != nil {
+		fmt.Println("Error")
+		http.Error(w, "Please give  me a Vaild json", 400)
+		return
+	}
+	//add product in global varibale
+	newProduct.ID = len(productList) + 1
+	productList = append(productList, newProduct)
+	//return response
+	encoder := json.NewEncoder(w)
+	encoder.Encode(newProduct)
+
+}
+
 func main() {
 	mux := http.NewServeMux()
 
 	// REST APIS
 	mux.HandleFunc("/hello", handleHello)
 	mux.HandleFunc("/products", getProducts)
+	mux.HandleFunc("/create-product", createProduct)
 
 	//Server Config
 	fmt.Println("Server is running on port, 3000")
