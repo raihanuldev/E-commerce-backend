@@ -20,13 +20,6 @@ type Product struct {
 	ImgUrl      string `json:"imageUrl"`
 }
 
-// Resubale Function
-func handleCors(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST,OPTIONS,PATCH,PUT,DELETE")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-	w.Header().Set("Content-Type", "application/json")
-}
 func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
 	w.WriteHeader(statusCode)
 	encoder := json.NewEncoder(w)
@@ -34,10 +27,6 @@ func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
 }
 
 // APIS handle function
-
-func handleHello(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello Server apied created....")
-}
 
 // Api for Get all Products
 func getProducts(w http.ResponseWriter, r *http.Request) {
@@ -75,8 +64,24 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func corsMiddileWare(next http.Handler) http.Handler {
-	corsHandler := func(w http.ResponseWriter, r *http.Request) {
+func main() {
+	mux := http.NewServeMux()
+	mux.Handle("/products",http.HandlerFunc(getProducts))
+	mux.Handle("/create-product",http.HandlerFunc(createProduct))
+
+	//Call all cores releted 
+	globalRouterMux:= globalRouter(mux)
+	//Server Config
+	fmt.Println("Server is running on port, 3000")
+	err := http.ListenAndServe(":3000", globalRouterMux)
+	if err != nil {
+		fmt.Println("ERROR server running ", err.Error())
+	}
+}
+
+
+func globalRouter(mux *http.ServeMux) http.Handler{
+	handleAllReq := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST,OPTIONS,PATCH,PUT,DELETE")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
@@ -84,31 +89,21 @@ func corsMiddileWare(next http.Handler) http.Handler {
 		//PreFlight OPTIONS
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
-			return
+			return 
 		}
-		next.ServeHTTP(w, r)
+		mux.ServeHTTP(w,r)
 	}
-	handler := http.HandlerFunc(corsHandler)
-	return handler
+	return http.HandlerFunc(handleAllReq)
 }
 
-func main() {
-	mux := http.NewServeMux()
-	mux.Handle("GET /hello", http.HandlerFunc(handleHello))
-	// mux.Handle("OPTIONS /products", http.HandlerFunc(getProducts))
-	// mux.Handle("GET /products", http.HandlerFunc(getProducts))
-	mux.Handle("/products", corsMiddileWare(http.HandlerFunc(getProducts)))
-	// mux.Handle("POST /create-product", http.HandlerFunc(createProduct))
-	// mux.Handle("OPTIONS /create-product", http.HandlerFunc(createProduct))
-	mux.Handle("/create-product", corsMiddileWare(http.HandlerFunc(createProduct)))
 
-	//Server Config
-	fmt.Println("Server is running on port, 3000")
-	err := http.ListenAndServe(":3000", mux)
-	if err != nil {
-		fmt.Println("ERROR server running ", err.Error())
-	}
-}
+
+
+
+
+
+
+
 
 // init function
 func init() {
