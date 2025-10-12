@@ -41,12 +41,6 @@ func handleHello(w http.ResponseWriter, r *http.Request) {
 
 // Api for Get all Products
 func getProducts(w http.ResponseWriter, r *http.Request) {
-	handleCors(w)
-
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(200)
-		return
-	}
 	if r.Method != "GET" {
 		http.Error(w, "Please Sent GET Request", 400)
 		return
@@ -57,11 +51,7 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 
 // Create Product
 func createProduct(w http.ResponseWriter, r *http.Request) {
-	handleCors(w)
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
+
 	//cheking if request are vaild or invaild
 	if r.Method != "POST" {
 		http.Error(w, "Please Sent POST Request", 400)
@@ -85,13 +75,32 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func corsMiddileWare(next http.Handler) http.Handler {
+	corsHandler := func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST,OPTIONS,PATCH,PUT,DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Content-Type", "application/json")
+		//PreFlight OPTIONS
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		next.ServeHTTP(w, r)
+	}
+	handler := http.HandlerFunc(corsHandler)
+	return handler
+}
+
 func main() {
 	mux := http.NewServeMux()
 	mux.Handle("GET /hello", http.HandlerFunc(handleHello))
-	mux.Handle("OPTIONS /products", http.HandlerFunc(getProducts))
-	mux.Handle("GET /products", http.HandlerFunc(getProducts))
-	mux.Handle("POST /create-product", http.HandlerFunc(createProduct))
-	mux.Handle("OPTIONS /create-product", http.HandlerFunc(createProduct))
+	// mux.Handle("OPTIONS /products", http.HandlerFunc(getProducts))
+	// mux.Handle("GET /products", http.HandlerFunc(getProducts))
+	mux.Handle("/products", corsMiddileWare(http.HandlerFunc(getProducts)))
+	// mux.Handle("POST /create-product", http.HandlerFunc(createProduct))
+	// mux.Handle("OPTIONS /create-product", http.HandlerFunc(createProduct))
+	mux.Handle("/create-product", corsMiddileWare(http.HandlerFunc(createProduct)))
 
 	//Server Config
 	fmt.Println("Server is running on port, 3000")
