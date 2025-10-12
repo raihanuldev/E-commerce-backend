@@ -17,7 +17,18 @@ type Product struct {
 	Title       string  `json:"title"`
 	Description string  `json:"description"`
 	Price       float64 `json:"price"`
-	imgUrl      string  `json:"imageUrl"`
+	ImgUrl      string  `json:"imageUrl"`
+}
+
+// Resubale Function
+func handleCors(w http.ResponseWriter){
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+}
+func sendData(w http.ResponseWriter,data interface{},statusCode int){
+	w.WriteHeader(statusCode)
+	encoder := json.NewEncoder(w)
+	encoder.Encode(data)
 }
 
 // APIS handle function
@@ -28,23 +39,18 @@ func handleHello(w http.ResponseWriter, r *http.Request) {
 
 // Api for Get all Products
 func getProducts(w http.ResponseWriter, r *http.Request) {
-	// response config
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
+	handleCors(w)
 	if r.Method != "GET" {
 		http.Error(w, "Please Sent GET Request", 400)
 		return
 	}
-	encoder := json.NewEncoder(w)
-	encoder.Encode(productList)
+	sendData(w,productList,200)
 
 }
 
 // Create Product
 func createProduct(w http.ResponseWriter, r *http.Request) {
-	// response config
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
+	handleCors(w)
 	//cheking if request are vaild or invaild
 	if r.Method != "POST" {
 		http.Error(w, "Please Sent POST Request", 400)
@@ -63,9 +69,8 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	//add product in global varibale
 	newProduct.ID = len(productList) + 1
 	productList = append(productList, newProduct)
-	//return response
-	encoder := json.NewEncoder(w)
-	encoder.Encode(newProduct)
+	
+	sendData(w,newProduct,201)
 
 }
 
@@ -93,42 +98,42 @@ func init() {
 		Title:       "headphone",
 		Description: "This is Best Quality Headphone i have ever seen",
 		Price:       199.21,
-		imgUrl:      "https/////image.url",
+		ImgUrl:      "https/////image.url",
 	}
 	pr2 := Product{
 		ID:          2,
 		Title:       "VIVO",
 		Description: "This is Best Quality VIVO Phone i have ever seen",
 		Price:       199.21,
-		imgUrl:      "https/////image.url",
+		ImgUrl:      "https/////image.url",
 	}
 	pr3 := Product{
 		ID:          3,
 		Title:       "APPLE",
 		Description: "This is Best Quality Headphone i have ever seen",
 		Price:       199.21,
-		imgUrl:      "https/////image.url",
+		ImgUrl:      "https/////image.url",
 	}
 	pr4 := Product{
 		ID:          4,
 		Title:       "SoundBox",
 		Description: "This is Best Quality SoundBox i have ever seen",
 		Price:       199.21,
-		imgUrl:      "https/////image.url",
+		ImgUrl:      "https/////image.url",
 	}
 	pr5 := Product{
 		ID:          5,
 		Title:       "Laptop",
 		Description: "This is Best Quality Laptop i have ever seen",
 		Price:       199.21,
-		imgUrl:      "https/////image.url",
+		ImgUrl:      "https/////image.url",
 	}
 	pr6 := Product{
 		ID:          6,
 		Title:       "Monitor",
 		Description: "This is Best Quality Monitor i have ever seen",
 		Price:       199.21,
-		imgUrl:      "https/////image.url",
+		ImgUrl:      "https/////image.url",
 	}
 	// for Static i will apend in slice
 	productList = append(productList, pr1)
