@@ -21,11 +21,11 @@ type Product struct {
 }
 
 // Resubale Function
-func handleCors(w http.ResponseWriter){
+func handleCors(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 }
-func sendData(w http.ResponseWriter,data interface{},statusCode int){
+func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
 	w.WriteHeader(statusCode)
 	encoder := json.NewEncoder(w)
 	encoder.Encode(data)
@@ -44,7 +44,7 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Please Sent GET Request", 400)
 		return
 	}
-	sendData(w,productList,200)
+	sendData(w, productList, 200)
 
 }
 
@@ -69,8 +69,8 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 	//add product in global varibale
 	newProduct.ID = len(productList) + 1
 	productList = append(productList, newProduct)
-	
-	sendData(w,newProduct,201)
+
+	sendData(w, newProduct, 201)
 
 }
 
@@ -78,9 +78,12 @@ func main() {
 	mux := http.NewServeMux()
 
 	// REST APIS
-	mux.HandleFunc("/hello", handleHello)
-	mux.HandleFunc("/products", getProducts)
-	mux.HandleFunc("/create-product", createProduct)
+	// mux.HandleFunc("/hello", handleHello)
+	mux.Handle("GET /hello", http.HandlerFunc(handleHello))
+	// mux.HandleFunc("/products", getProducts)
+	mux.Handle("GET /products", http.HandlerFunc(getProducts))
+	// mux.HandleFunc("/create-product", createProduct)
+	mux.Handle("POST /create-product", http.HandlerFunc(createProduct))
 
 	//Server Config
 	fmt.Println("Server is running on port, 3000")
