@@ -1,13 +1,15 @@
-package main
+package handlers
 
 import (
+	"ecommerce/database"
+	"ecommerce/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
 // Create Product
-func createProduct(w http.ResponseWriter, r *http.Request) {
+func CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	//cheking if request are vaild or invaild
 	if r.Method != "POST" {
@@ -15,7 +17,7 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//catching data from request
-	var newProduct Product
+	var newProduct database.Product
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newProduct)
 
@@ -25,9 +27,9 @@ func createProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//add product in global varibale
-	newProduct.ID = len(productList) + 1
-	productList = append(productList, newProduct)
+	newProduct.ID = len(database.ProductList) + 1
+	database.ProductList = append(database.ProductList, newProduct)
 
-	sendData(w, newProduct, 201)
+	utils.SendData(w, newProduct, 201)
 
 }
