@@ -11,7 +11,12 @@ func Serve() {
 	manager := middleware.NewManager()
 
 	mux := http.NewServeMux()
-	WrapedMux := manager.WrapMux(mux, middleware.Logger, middleware.PreFlight, middleware.Cors)
+	// Type one
+	manager.Use(middleware.Cors, middleware.PreFlight, middleware.Logger)
+
+	// Type two
+	// WrapedMux := manager.WrapMux(mux, middleware.Logger, middleware.PreFlight, middleware.Cors)
+	WrapedMux := manager.WrapMux(mux)
 
 	initRoutes(mux, manager)
 
