@@ -12,7 +12,7 @@ func Serve() {
 
 	mux := http.NewServeMux()
 	// Type one
-	manager.Use(middleware.Cors, middleware.PreFlight, middleware.Logger)
+	manager.Use(middleware.PreFlight, middleware.Cors, middleware.Logger)
 
 	// Type two
 	// WrapedMux := manager.WrapMux(mux, middleware.Logger, middleware.PreFlight, middleware.Cors)
