@@ -26,10 +26,8 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Please give  me a Vaild json", 400)
 		return
 	}
-	//add product in global varibale
-	newProduct.ID = len(database.ProductList) + 1
-	database.ProductList = append(database.ProductList, newProduct)
 
+	database.Store(newProduct)
 	utils.SendData(w, newProduct, 201)
 
 }

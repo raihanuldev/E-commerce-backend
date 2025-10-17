@@ -1,7 +1,46 @@
 package database
 
 // GLobal Varibal
-var ProductList []Product
+var productList []Product
+
+func Store(p Product)Product {
+	p.ID = len(productList) + 1
+	productList = append(productList, p)
+	return p
+}
+
+func Get(productId int) *Product {
+	for _, product := range productList {
+		// log.Printf()
+		if product.ID == productId {
+			return &product
+		}
+	}
+	return nil
+}
+
+func Update(p Product) {
+	for idx, product := range productList {
+		// log.Printf()
+		if product.ID == p.ID {
+			productList[idx] = p
+		}
+	}
+}
+func Delete(productId int) {
+	var tmpList []Product
+	for idx, product := range productList {
+		// log.Printf()
+		if product.ID != productId {
+			tmpList[idx] = product
+		}
+	}
+	productList = tmpList
+}
+
+func List() []Product {
+	return productList
+}
 
 func init() {
 	// at frist i will create some product when init funtion excuted
@@ -48,10 +87,10 @@ func init() {
 		ImgUrl:      "https/////image.url",
 	}
 	// for Static i will apend in slice
-	ProductList = append(ProductList, pr1)
-	ProductList = append(ProductList, pr2)
-	ProductList = append(ProductList, pr3)
-	ProductList = append(ProductList, pr4)
-	ProductList = append(ProductList, pr5)
-	ProductList = append(ProductList, pr6)
+	productList = append(productList, pr1)
+	productList = append(productList, pr2)
+	productList = append(productList, pr3)
+	productList = append(productList, pr4)
+	productList = append(productList, pr5)
+	productList = append(productList, pr6)
 }

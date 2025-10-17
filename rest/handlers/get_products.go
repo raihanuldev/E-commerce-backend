@@ -12,6 +12,6 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Please Sent GET Request", 400)
 		return
 	}
-	utils.SendData(w, database.ProductList, 200)
+	utils.SendData(w, database.List(), 200)
 
 }
