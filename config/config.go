@@ -11,7 +11,7 @@ import (
 type Config struct {
 	Version     string
 	ServiceName string
-	HttpPort    int64
+	HttpPort    int
 }
 
 var configInfo Config
@@ -48,7 +48,7 @@ func loadConfig() {
 	configInfo = Config{
 		Version:     ServiceVersion,
 		ServiceName: ServiceName,
-		HttpPort:    port,
+		HttpPort:    int(port),
 	}
 }
 
