@@ -8,7 +8,6 @@ import (
 	"net/http"
 )
 
-// Create Product
 func CreateUsers(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "POST" {
@@ -25,8 +24,6 @@ func CreateUsers(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invaild Request", 400)
 		return
 	}
-
-	// database.Store(newProduct)
 	createdUSer:=newUser.Store()
 	utils.SendData(w, createdUSer, http.StatusCreated)
 
