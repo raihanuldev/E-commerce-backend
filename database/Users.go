@@ -19,3 +19,12 @@ func (u User) Store() User {
 	users = append(users, u)
 	return u
 }
+
+func Find(email string )*User{
+	for _,u :=range users{
+		if(u.Email==email){
+			return &u
+		}
+	}
+	return nil
+}

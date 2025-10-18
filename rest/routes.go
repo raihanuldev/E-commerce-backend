@@ -11,4 +11,5 @@ func initRoutes(mux *http.ServeMux, manager *middleware.Manager) {
 	mux.Handle("POST /products", manager.With(http.HandlerFunc(handlers.CreateProduct)))
 	mux.Handle("GET /products/{id}", manager.With(http.HandlerFunc(handlers.GetProductByID)))
 	mux.Handle("POST /users", manager.With(http.HandlerFunc(handlers.CreateUsers)))
+	mux.Handle("POST /login", manager.With(http.HandlerFunc(handlers.Login)))
 }
