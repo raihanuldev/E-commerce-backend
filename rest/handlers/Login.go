@@ -31,5 +31,9 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	// createdUSer := newUser.Store()
 	logggedUser := database.Find(logginUser.Email)
 
+	if logggedUser == nil {
+		http.Error(w, "Invaild Createditional", http.StatusBadRequest)
+		return
+	}
 	utils.SendData(w, logggedUser, http.StatusCreated)
 }
