@@ -6,6 +6,7 @@ type User struct {
 	LastName    string `json:"last_name"`
 	Email       string `json:"email"`
 	IsShopOwner string `json:"is_shop_owner"`
+	Password string `json:"password"`
 }
 
 var users []User

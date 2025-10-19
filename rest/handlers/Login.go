@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"ecommerce/config"
 	"ecommerce/database"
 	"ecommerce/utils"
 	"encoding/json"
@@ -35,5 +36,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invaild Createditional", http.StatusBadRequest)
 		return
 	}
-	utils.SendData(w, logggedUser, http.StatusCreated)
+	cnf:= config.GetConfig()
+
+	accessToken,err:= utils.CreateJwt(cnf.SecretKey,utils.Payload{
+		Sub: logggedUser.ID,
+		FristName: logggedUser.FristName,
+		LastName: logggedUser.LastName,
+		Email: logggedUser.Email,
+		IsShopOwner: logggedUser.IsShopOwner,
+	})
+	if(err != nil){
+		http.Error(w,"Internel Server Error",http.StatusInternalServerError)
+		return
+	}
+	utils.SendData(w, accessToken, http.StatusCreated)
 }

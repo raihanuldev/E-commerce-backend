@@ -12,6 +12,7 @@ type Config struct {
 	Version     string
 	ServiceName string
 	HttpPort    int
+	SecretKey   string
 }
 
 var configInfo Config
@@ -44,11 +45,13 @@ func loadConfig() {
 	if err != nil {
 		throwErrorForConfig("HTTP_PORT")
 	}
+	secretKey := os.Getenv("JWT_SECRET_KEY")
 
 	configInfo = Config{
 		Version:     ServiceVersion,
 		ServiceName: ServiceName,
 		HttpPort:    int(port),
+		SecretKey:   secretKey,
 	}
 }
 
