@@ -1,4 +1,4 @@
-package handlers
+package product
 
 import (
 	"ecommerce/database"
@@ -9,7 +9,7 @@ import (
 )
 
 // Create Product
-func CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (h*Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	//cheking if request are vaild or invaild
 	if r.Method != "POST" {

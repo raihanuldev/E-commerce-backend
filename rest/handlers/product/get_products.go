@@ -1,4 +1,4 @@
-package handlers
+package product
 
 import (
 	"ecommerce/database"
@@ -7,7 +7,7 @@ import (
 )
 
 // Api for Get all Products
-func GetProducts(w http.ResponseWriter, r *http.Request) {
+func (h*Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Please Sent GET Request", 400)
 		return
