@@ -55,7 +55,7 @@ func loadConfig() {
 	}
 }
 
-func GetConfig() Config {
+func GetConfig() *Config {
 	loadConfig()
-	return configInfo
+	return &configInfo
 }

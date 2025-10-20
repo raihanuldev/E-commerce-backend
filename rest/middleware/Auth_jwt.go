@@ -3,13 +3,12 @@ package middleware
 import (
 	"crypto/hmac"
 	"crypto/sha256"
-	"ecommerce/config"
 	"encoding/base64"
 	"net/http"
 	"strings"
 )
 
-func AuthJWT(next http.Handler) http.Handler {
+func (m *Middlewares) AuthJWT(next http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
 			// Implement JWT Checking
@@ -28,7 +27,8 @@ func AuthJWT(next http.Handler) http.Handler {
 				return
 			}
 			//Hash create
-			cnf := config.GetConfig()
+			// cnf := config.GetConfig()  //convert it Layer
+
 			/**
 			header=> accessToken[0]
 			payload=> accessToken[1]
@@ -36,7 +36,8 @@ func AuthJWT(next http.Handler) http.Handler {
 			*/
 			message := accessTokenArr[0] + "." + accessTokenArr[1]
 
-			secretByteArr := []byte(cnf.SecretKey)
+			// secretByteArr := []byte(cnf.SecretKey)
+			secretByteArr := []byte(m.cnf.SecretKey)
 			messagebyteArr := []byte(message)
 
 			h := hmac.New(sha256.New, secretByteArr)
