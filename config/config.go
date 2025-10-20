@@ -15,7 +15,7 @@ type Config struct {
 	SecretKey   string
 }
 
-var configInfo Config
+var configInfo *Config
 
 func throwErrorForConfig(envName string) {
 	fmt.Println(envName, "IS Required")
@@ -23,7 +23,6 @@ func throwErrorForConfig(envName string) {
 }
 
 func loadConfig() {
-	// ✅ 2. .env file load করো (PRIMA!)
 	godotenv.Load()
 
 	ServiceName := os.Getenv("SERVICE_NAME")
@@ -47,7 +46,7 @@ func loadConfig() {
 	}
 	secretKey := os.Getenv("JWT_SECRET_KEY")
 
-	configInfo = Config{
+	configInfo = &Config{
 		Version:     ServiceVersion,
 		ServiceName: ServiceName,
 		HttpPort:    int(port),
@@ -56,6 +55,8 @@ func loadConfig() {
 }
 
 func GetConfig() *Config {
-	loadConfig()
-	return &configInfo
+	if(configInfo ==nil){  //avoiding reptedly load env
+		loadConfig()
+	}
+	return configInfo
 }
