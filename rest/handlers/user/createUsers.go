@@ -1,21 +1,21 @@
 package user
 
 import (
-	"ecommerce/database"
+	"ecommerce/repo"
 	"ecommerce/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
-func (h* Handler) CreateUsers(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateUsers(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "POST" {
 		http.Error(w, "Please Sent POST Request", 400)
 		return
 	}
 	//catching data from request
-	var newUser database.User
+	var newUser repo.User
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newUser)
 
@@ -24,7 +24,7 @@ func (h* Handler) CreateUsers(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invaild Request", 400)
 		return
 	}
-	createdUSer := newUser.Store()
+	createdUSer := h.userRepo.Create(newUser)
 	utils.SendData(w, createdUSer, http.StatusCreated)
 
 }

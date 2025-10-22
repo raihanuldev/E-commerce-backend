@@ -2,7 +2,6 @@ package user
 
 import (
 	"ecommerce/config"
-	"ecommerce/database"
 	"ecommerce/utils"
 	"encoding/json"
 	"fmt"
@@ -14,7 +13,7 @@ type ReqLogin struct {
 	Password string `json:"password"`
 }
 
-func (h*Handler) Login(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Please Sent POST Request", 400)
 		return
@@ -30,23 +29,23 @@ func (h*Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// createdUSer := newUser.Store()
-	logggedUser := database.Find(logginUser.Email)
+	logggedUser := h.userRepo.Find(logginUser.Email)
 
 	if logggedUser == nil {
 		http.Error(w, "Invaild Createditional", http.StatusBadRequest)
 		return
 	}
-	cnf:= config.GetConfig()
+	cnf := config.GetConfig()
 
-	accessToken,err:= utils.CreateJwt(cnf.SecretKey,utils.Payload{
-		Sub: logggedUser.ID,
-		FristName: logggedUser.FristName,
-		LastName: logggedUser.LastName,
-		Email: logggedUser.Email,
+	accessToken, err := utils.CreateJwt(cnf.SecretKey, utils.Payload{
+		Sub:         logggedUser.ID,
+		FristName:   logggedUser.FristName,
+		LastName:    logggedUser.LastName,
+		Email:       logggedUser.Email,
 		IsShopOwner: logggedUser.IsShopOwner,
 	})
-	if(err != nil){
-		http.Error(w,"Internel Server Error",http.StatusInternalServerError)
+	if err != nil {
+		http.Error(w, "Internel Server Error", http.StatusInternalServerError)
 		return
 	}
 	utils.SendData(w, accessToken, http.StatusCreated)
