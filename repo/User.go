@@ -2,11 +2,8 @@ package repo
 
 type UserRepo interface {
 	Create(newUser User)User
-	Get()
-	Lists()
+	Lists()*[]User
 	Find(email string)*User
-	// Update()
-	// Delete()
 }
 
 type User struct {
