@@ -1,7 +1,7 @@
 package product
 
 import (
-	"ecommerce/database"
+	"ecommerce/repo"
 	"ecommerce/utils"
 	"encoding/json"
 	"fmt"
@@ -9,15 +9,14 @@ import (
 )
 
 // Create Product
-func (h*Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 
-	//cheking if request are vaild or invaild
 	if r.Method != "POST" {
 		http.Error(w, "Please Sent POST Request", 400)
 		return
 	}
 	//catching data from request
-	var newProduct database.Product
+	var newProduct repo.Product
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newProduct)
 
@@ -27,7 +26,8 @@ func (h*Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	database.Store(newProduct)
+	// database.Store(newProduct
+	h.productRepo.Create(repo.Product(newProduct))
 	utils.SendData(w, newProduct, 201)
 
 }

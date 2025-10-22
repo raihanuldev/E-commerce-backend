@@ -1,7 +1,6 @@
 package product
 
 import (
-	"ecommerce/database"
 	"ecommerce/utils"
 	"fmt"
 	"net/http"
@@ -16,7 +15,7 @@ func (h *Handler) GetProductByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "please give Valid ID", 400)
 		return
 	}
-	product := database.Get(pid)
+	product := h.productRepo.Get(pid)
 	if product == nil {
 		utils.SendData(w, "Prodcut Not found", 404) //TODO: Create a Function for SendError
 	} else {
