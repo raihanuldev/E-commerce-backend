@@ -1,9 +1,11 @@
 package repo
 
+import "github.com/jmoiron/sqlx"
+
 type UserRepo interface {
-	Create(newUser User)User
-	Lists()*[]User
-	Find(email string)*User
+	Create(newUser User) User
+	Lists() *[]User
+	Find(email string) *User
 }
 
 type User struct {
@@ -15,32 +17,64 @@ type User struct {
 	Password    string `json:"password"`
 }
 type userRepo struct {
-	userList []User
+	db *sqlx.DB
 }
 
-func NewUserRepo() *userRepo {
-	repo := &userRepo{}
-	return repo
+func NewUserRepo(db *sqlx.DB) *userRepo {
+	return &userRepo{
+		db: db,
+	}
 }
 
 func (r *userRepo) Lists() *[]User {
-	return &r.userList
+	var users []User
+
+	query := `
+		SELECT id, frist_name, last_name, email, is_shop_owner, password
+		FROM users
+		ORDER BY id
+	`
+
+	err := r.db.Select(&users, query)
+	if err != nil {
+		// Return empty slice on error
+		empty := make([]User, 0)
+		return &empty
+	}
+
+	return &users
 }
 
 func (r *userRepo) Create(u User) User {
-	if u.ID != 0 {
-		return u
+	query := `
+		INSERT INTO users (frist_name, last_name, email, is_shop_owner, password)
+		VALUES ($1, $2, $3, $4, $5)
+		RETURNING id
+	`
+
+	var id int
+	err := r.db.QueryRow(query, u.FristName, u.LastName, u.Email, u.IsShopOwner, u.Password).Scan(&id)
+	if err != nil {
+		return User{}
 	}
-	u.ID = len(r.userList) + 1
-	r.userList = append(r.userList, u)
+
+	u.ID = id
 	return u
 }
 
 func (r *userRepo) Find(email string) *User {
-	for _, u := range r.userList {
-		if u.Email == email {
-			return &u
-		}
+	var user User
+
+	query := `
+		SELECT id, frist_name, last_name, email, is_shop_owner, password
+		FROM users
+		WHERE email = $1
+	`
+
+	err := r.db.Get(&user, query, email)
+	if err != nil {
+		return nil 
 	}
-	return nil
+
+	return &user
 }
