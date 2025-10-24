@@ -24,7 +24,10 @@ func (h *Handler) CreateUsers(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invaild Request", 400)
 		return
 	}
-	createdUSer := h.userRepo.Create(newUser)
+	createdUSer, err := h.userRepo.Create(newUser)
+	if err != nil {
+		fmt.Print("error", err)
+	}
 	utils.SendData(w, createdUSer, http.StatusCreated)
 
 }

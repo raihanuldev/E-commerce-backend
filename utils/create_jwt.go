@@ -16,7 +16,7 @@ type Payload struct {
 	FristName   string `json:"frist_name"`
 	LastName    string `json:"last_name"`
 	Email       string `json:"email"`
-	IsShopOwner string `json:"is_shop_owner"`
+	IsShopOwner bool `json:"is_shop_owner"`
 }
 
 func CreateJwt(secret string,data Payload) (string,error) {

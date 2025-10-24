@@ -32,6 +32,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	logggedUser := h.userRepo.Find(logginUser.Email)
 
 	if logggedUser == nil {
+
+		fmt.Println()
 		http.Error(w, "Invaild Createditional", http.StatusBadRequest)
 		return
 	}
