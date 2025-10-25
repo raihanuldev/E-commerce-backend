@@ -5,20 +5,37 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func (h *Handler) GetProductByID(w http.ResponseWriter, r *http.Request) {
-	productid := r.PathValue("productId")
-	fmt.Println(productid)
-	pid, err := strconv.Atoi(productid)
-	if err != nil {
-		http.Error(w, "please give Valid ID", 400)
+	// Split the path manually
+	parts := strings.Split(r.URL.Path, "/")
+	if len(parts) < 3 { // e.g., ["", "products", "2"]
+		http.Error(w, "Product ID is required", http.StatusBadRequest)
 		return
 	}
-	product := h.productRepo.Get(pid)
-	if product == nil {
-		utils.SendData(w, "Prodcut Not found", 404) //TODO: Create a Function for SendError
-	} else {
-		utils.SendData(w, product, 200)
+
+	productIDStr := parts[2]
+	fmt.Println("Product ID from path:", productIDStr)
+
+	pid, err := strconv.Atoi(productIDStr)
+	if err != nil {
+		http.Error(w, "Please provide a valid ID", http.StatusBadRequest)
+		return
 	}
+
+	product, err := h.productRepo.Get(pid)
+	if err != nil {
+		utils.SendData(w, map[string]string{"error": "Internal server error"}, http.StatusInternalServerError)
+		return
+	}
+
+	if product == nil {
+		utils.SendData(w, map[string]string{"error": "Product not found"}, http.StatusNotFound)
+		return
+	}
+
+	utils.SendData(w, product, http.StatusOK)
 }
+

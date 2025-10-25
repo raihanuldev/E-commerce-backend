@@ -21,14 +21,6 @@ type User struct {
 	CreatedAt   string `db:"created_at" json:"created_at"` // optional: time.Time preferred
 }
 
-//	type User struct {
-//		ID          int    `json:"id"`
-//		FristName   string `json:"frist_name"`
-//		LastName    string `json:"last_name"`
-//		Email       string `json:"email"`
-//		IsShopOwner string `json:"is_shop_owner"`
-//		Password    string `json:"password"`
-//	}
 type userRepo struct {
 	db *sqlx.DB
 }
@@ -75,22 +67,6 @@ func (r *userRepo) Create(u User) (User, error) {
 	return u, nil
 }
 
-// func (r *userRepo) Create(u User) User {
-// 	query := `
-// 		INSERT INTO users (frist_name, last_name, email, is_shop_owner, password)
-// 		VALUES ($1, $2, $3, $4, $5)
-// 		RETURNING id
-// 	`
-
-// 	var id int
-// 	err := r.db.QueryRow(query, u.FristName, u.LastName, u.Email, u.IsShopOwner, u.Password).Scan(&id)
-// 	if err != nil {
-// 		return User{}
-// 	}
-
-// 	u.ID = id
-// 	return u
-// }
 
 func (r *userRepo) Find(email string) *User {
 	var user User
@@ -107,20 +83,3 @@ func (r *userRepo) Find(email string) *User {
 	}
 	return &user
 }
-
-// func (r *userRepo) Find(email string) *User {
-// 	var user User
-
-// 	query := `
-// 		SELECT id, frist_name, last_name, email, is_shop_owner, password
-// 		FROM users
-// 		WHERE email = $1
-// 	`
-
-// 	err := r.db.Get(&user, query, email)
-// 	if err != nil {
-// 		return nil
-// 	}
-
-// 	return &user
-// }

@@ -1,117 +1,107 @@
 package repo
 
-//	Product Struct
+import (
+	"database/sql"
+
+	"github.com/jmoiron/sqlx"
+)
+
+// Product Struct
 type Product struct {
-	ID          int    `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Price       string `json:"price"`
-	ImgUrl      string `json:"imageUrl"`
+	ID          int     `db:"id" json:"id"`
+	Title       string  `db:"title" json:"title"`
+	Description string  `db:"description" json:"description"`
+	Price       float32 `db:"price" json:"price"`
+	ImgUrl      string  `db:"imgurl" json:"imgUrl"`
 }
 
 type ProductRepo interface {
-	Create(p Product) Product
-	Get(productId int) *Product
-	Delete(productId int)
-	Update(product Product)
-	List() []Product
+	Create(p Product) (*Product, error)
+	Get(productId int) (*Product, error)
+	Delete(productId int) (*Product, error)
+	Update(product Product) (*Product, error)
+	List() ([]*Product, error)
 }
 
 type productRepo struct {
-	productList []Product
+	db *sqlx.DB
 }
 
 //constructor or contructor Method
 
-func NewProductRepo() ProductRepo {
-	repo := &productRepo{}
-	GenerateInitProducts(repo)
+func NewProductRepo(db *sqlx.DB) ProductRepo {
+	repo := &productRepo{
+		db: db,
+	}
 	return repo
 }
 
-func (r *productRepo) List() []Product {
-	return r.productList
+func (r *productRepo) Create(p Product) (*Product, error) {
+	query := `
+	INSERT INTO products(
+    	title,
+		description,
+		price,
+		ImgUrl
+	) 	VALUES (
+    	$1,
+		$2,
+		$3,
+		$4
+) 
+	RETURNING id
+	`
+	row := r.db.QueryRow(query, p.Title, p.Description, p.Price, p.ImgUrl)
+	err := row.Scan(&p.ID)
+	if err != nil {
+		return nil, err
+	}
+	return &p, nil
 }
+func (r *productRepo) List() ([]*Product, error) {
+	var products []*Product
+	query := `SELECT id, title, description, price, imgurl FROM products;`
 
-func (r *productRepo) Create(p Product) Product {
-	p.ID = len(r.productList) + 1
-	r.productList = append(r.productList, p)
-	return p
-}
-func (r *productRepo) Get(productId int) *Product {
-	for _, product := range r.productList {
-		if product.ID == productId {
-			return &product
-		}
+	err := r.db.Select(&products, query)
+	if err != nil {
+		return nil, err
 	}
-	return nil
+	return products, nil
 }
-func (r *productRepo) Delete(productId int) {
-	var tmpList []Product
-	for idx, product := range r.productList {
-		if product.ID != productId {
-			tmpList[idx] = product
+func (r *productRepo) Get(productId int) (*Product, error) {
+	var product Product
+	query := `SELECT id, title, description, price, imgurl FROM products  where id=$1;`
+	err := r.db.Get(&product, query, productId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, nil
 		}
+		return nil, err
 	}
-	r.productList = tmpList
-}
-func (r *productRepo) Update(p Product) {
-	for idx, product := range r.productList {
-		// log.Printf()
-		if product.ID == p.ID {
-			r.productList[idx] = p
-		}
-	}
-}
+	return &product, nil
 
-func GenerateInitProducts(r *productRepo) {
-	pr1 := Product{
-		ID:          1,
-		Title:       "headphone",
-		Description: "This is Best Quality Headphone i have ever seen",
-		Price:       "199.21",
-		ImgUrl:      "https/////image.url",
+}
+func (r *productRepo) Delete(productId int) (*Product, error) {
+	query := `DELETE FROM products where id=$1`
+	_, err := r.db.Exec(query, productId)
+	if err != nil {
+		return nil, err
 	}
-	pr2 := Product{
-		ID:          2,
-		Title:       "VIVO",
-		Description: "This is Best Quality VIVO Phone i have ever seen",
-		Price:       "199.21",
-		ImgUrl:      "https/////image.url",
+	return nil, nil
+}
+func (r *productRepo) Update(p Product) (*Product, error) {
+	query := `
+	UPDATE products SET (
+    		title=$1,
+			description=$2,
+			price=$3,
+			ImgUrl=$4
+    	) where id=$5
+	`
+	rows := r.db.QueryRow(query, p.Title, p.Description, p.Price, p.ImgUrl, p.ID)
+	err := rows.Err()
+	if err != nil {
+		return nil, err
 	}
-	pr3 := Product{
-		ID:          3,
-		Title:       "APPLE",
-		Description: "This is Best Quality Headphone i have ever seen",
-		Price:       "199.21",
-		ImgUrl:      "https/////image.url",
-	}
-	pr4 := Product{
-		ID:          4,
-		Title:       "SoundBox",
-		Description: "This is Best Quality SoundBox i have ever seen",
-		Price:       "199.21",
-		ImgUrl:      "https/////image.url",
-	}
-	pr5 := Product{
-		ID:          5,
-		Title:       "Laptop",
-		Description: "This is Best Quality Laptop i have ever seen",
-		Price:       "199.21",
-		ImgUrl:      "https/////image.url",
-	}
-	pr6 := Product{
-		ID:          6,
-		Title:       "Monitor",
-		Description: "This is Best Quality Monitor i have ever seen",
-		Price:       "199.21",
-		ImgUrl:      "https/////image.url",
-	}
-	// for Static i will apend in slice
-	r.productList = append(r.productList, pr1)
-	r.productList = append(r.productList, pr2)
-	r.productList = append(r.productList, pr3)
-	r.productList = append(r.productList, pr4)
-	r.productList = append(r.productList, pr5)
-	r.productList = append(r.productList, pr6)
+	return &p, nil
 }

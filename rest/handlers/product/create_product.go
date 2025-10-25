@@ -27,7 +27,10 @@ func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// database.Store(newProduct
-	h.productRepo.Create(repo.Product(newProduct))
-	utils.SendData(w, newProduct, 201)
+	pr, err := h.productRepo.Create(repo.Product(newProduct))
+	if err != nil {
+		http.Error(w, "Error to Create prodccut", http.StatusInternalServerError)
+	}
+	utils.SendData(w, pr, 201)
 
 }

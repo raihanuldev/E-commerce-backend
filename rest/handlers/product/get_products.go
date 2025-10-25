@@ -5,13 +5,17 @@ import (
 	"net/http"
 )
 
-// Api for Get all Products
 func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
-		http.Error(w, "Please Sent GET Request", 400)
+		http.Error(w, "Please send a GET request", http.StatusBadRequest)
 		return
 	}
 
-	utils.SendData(w, h.productRepo.List(), 200)
+	products, err := h.productRepo.List()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
+	utils.SendData(w, products, http.StatusOK)
 }
