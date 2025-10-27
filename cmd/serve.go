@@ -15,13 +15,12 @@ import (
 func Serve() {
 	cnf := config.GetConfig()
 
-	dbConn,err:=db.NewConnection()
+	dbConn, err := db.NewConnection(&cnf.DbConnection)
 
-	if(err!=nil){
+	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-
 
 	productRepo := repo.NewProductRepo(dbConn)
 	userRepo := repo.NewUserRepo(dbConn)
