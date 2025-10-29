@@ -1,15 +1,8 @@
 package product
 
-import (
-	"ecommerce/domain"
-	productHandler "ecommerce/rest/handlers/product"
-)
+import "ecommerce/domain"
 
-type Service interface{
-	productHandler.Service //embadding
-}
-
-type ProductRepo interface {
+type Service interface {
 	Create(p domain.Product) (*domain.Product, error)
 	Get(productId int) (*domain.Product, error)
 	Delete(productId int) (*domain.Product, error)

@@ -28,7 +28,7 @@ func (h *Handler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call repo to delete
-	_, err = h.productRepo.Delete(pid)
+	_, err = h.svc.Delete(pid)
 	if err != nil {
 		utils.SendData(w, map[string]string{"error": "Internal server error"}, http.StatusInternalServerError)
 		return

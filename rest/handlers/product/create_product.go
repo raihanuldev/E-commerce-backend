@@ -1,7 +1,7 @@
 package product
 
 import (
-	"ecommerce/repo"
+	"ecommerce/domain"
 	"ecommerce/utils"
 	"encoding/json"
 	"fmt"
@@ -16,7 +16,7 @@ func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//catching data from request
-	var newProduct repo.Product
+	var newProduct domain.Product
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newProduct)
 
@@ -27,7 +27,7 @@ func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// database.Store(newProduct
-	pr, err := h.productRepo.Create(repo.Product(newProduct))
+	pr, err := h.svc.Create(domain.Product(newProduct))
 	if err != nil {
 		http.Error(w, "Error to Create prodccut", http.StatusInternalServerError)
 	}

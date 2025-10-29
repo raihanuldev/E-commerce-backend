@@ -25,7 +25,7 @@ func (h *Handler) GetProductByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	product, err := h.productRepo.Get(pid)
+	product, err := h.svc.Get(pid)
 	if err != nil {
 		utils.SendData(w, map[string]string{"error": "Internal server error"}, http.StatusInternalServerError)
 		return

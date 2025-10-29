@@ -1,7 +1,7 @@
 package product
 
 import (
-	"ecommerce/repo"
+	"ecommerce/domain"
 	"ecommerce/utils"
 	"encoding/json"
 	"net/http"
@@ -30,7 +30,7 @@ func (h *Handler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Parse request body JSON
-	var updatedProduct repo.Product
+	var updatedProduct domain.Product
 	err = json.NewDecoder(r.Body).Decode(&updatedProduct)
 	if err != nil {
 		http.Error(w, "Invalid JSON body", http.StatusBadRequest)
@@ -40,7 +40,7 @@ func (h *Handler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	updatedProduct.ID = pid // ensure ID is set
 
 	// Call repo to update
-	product, err := h.productRepo.Update(updatedProduct)
+	product, err := h.svc.Update(updatedProduct)
 	if err != nil {
 		utils.SendData(w, map[string]string{"error": "Internal server error"}, http.StatusInternalServerError)
 		return
