@@ -1,7 +1,7 @@
 package user
 
 import (
-	"ecommerce/repo"
+	"ecommerce/domain"
 	"ecommerce/utils"
 	"encoding/json"
 	"fmt"
@@ -15,7 +15,7 @@ func (h *Handler) CreateUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//catching data from request
-	var newUser repo.User
+	var newUser domain.User
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&newUser)
 
@@ -24,7 +24,7 @@ func (h *Handler) CreateUsers(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invaild Request", 400)
 		return
 	}
-	createdUSer, err := h.userRepo.Create(newUser)
+	createdUSer, err := h.svc.Create(newUser)
 	if err != nil {
 		fmt.Print("error", err)
 	}

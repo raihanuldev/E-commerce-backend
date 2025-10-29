@@ -1,25 +1,17 @@
 package repo
 
 import (
+	"ecommerce/domain"
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
 
-type UserRepo interface {
-	Create(newUser User) (User, error)
-	Lists() *[]User
-	Find(email string) *User
-}
-type User struct {
-	ID          int    `db:"id" json:"id"`
-	FristName   string `db:"frist_name" json:"frist_name"`
-	LastName    string `db:"last_name" json:"last_name"`
-	Email       string `db:"email" json:"email"`
-	IsShopOwner bool   `db:"is_shop_owner" json:"is_shop_owner"`
-	Password    string `db:"password" json:"password"`
-	CreatedAt   string `db:"created_at" json:"created_at"` // optional: time.Time preferred
-}
+// type UserRepo interface {
+// 	Create(newUser User) (*User, error)
+// 	// Lists() *[]User
+// 	Find(email string) *User
+// }
 
 type userRepo struct {
 	db *sqlx.DB
@@ -31,8 +23,8 @@ func NewUserRepo(db *sqlx.DB) *userRepo {
 	}
 }
 
-func (r *userRepo) Lists() *[]User {
-	var users []User
+func (r *userRepo) Lists() *[]domain.User {
+	var users []domain.User
 
 	query := `
 		SELECT id, frist_name, last_name, email, is_shop_owner, password
@@ -43,13 +35,13 @@ func (r *userRepo) Lists() *[]User {
 	err := r.db.Select(&users, query)
 	if err != nil {
 		// Return empty slice on error
-		empty := make([]User, 0)
+		empty := make([]domain.User, 0)
 		return &empty
 	}
 
 	return &users
 }
-func (r *userRepo) Create(u User) (User, error) {
+func (r *userRepo) Create(u domain.User) (*domain.User, error) {
 	query := `
         INSERT INTO users (frist_name, last_name, email, is_shop_owner, password)
         VALUES ($1, $2, $3, $4, $5)
@@ -60,16 +52,15 @@ func (r *userRepo) Create(u User) (User, error) {
 	err := r.db.QueryRow(query, u.FristName, u.LastName, u.Email, u.IsShopOwner, u.Password).
 		Scan(&id, &createdAt)
 	if err != nil {
-		return User{}, err
+		return &domain.User{}, err
 	}
 	u.ID = id
 	u.CreatedAt = createdAt
-	return u, nil
+	return &u, nil
 }
 
-
-func (r *userRepo) Find(email string) *User {
-	var user User
+func (r *userRepo) Find(email string) (*domain.User, error) {
+	var user domain.User
 	query := `
         SELECT id, frist_name, last_name, email, is_shop_owner, password, created_at
         FROM users
@@ -79,7 +70,7 @@ func (r *userRepo) Find(email string) *User {
 	err := r.db.Get(&user, query, email)
 	if err != nil {
 		fmt.Println("Find user DB error:", err)
-		return nil
+		return nil, err
 	}
-	return &user
+	return &user, nil
 }

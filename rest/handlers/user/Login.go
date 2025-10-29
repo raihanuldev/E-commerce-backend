@@ -29,7 +29,10 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// createdUSer := newUser.Store()
-	logggedUser := h.userRepo.Find(logginUser.Email)
+	logggedUser, err := h.svc.Find(logginUser.Email)
+	if err != nil {
+		fmt.Println("Err", err)
+	}
 
 	if logggedUser == nil {
 
