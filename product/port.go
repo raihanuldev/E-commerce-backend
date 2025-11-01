@@ -5,7 +5,7 @@ import (
 	productHandler "ecommerce/rest/handlers/product"
 )
 
-type Service interface{
+type Service interface {
 	productHandler.Service //embadding
 }
 
@@ -14,5 +14,6 @@ type ProductRepo interface {
 	Get(productId int) (*domain.Product, error)
 	Delete(productId int) (*domain.Product, error)
 	Update(product domain.Product) (*domain.Product, error)
-	List() ([]*domain.Product, error)
+	List(page, limit int64) ([]*domain.Product, error)
+	Count() (int64, error)
 }

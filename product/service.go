@@ -33,12 +33,19 @@ func (svc *service) Get(productId int) (*domain.Product, error) {
 	}
 	return pro, nil
 }
-func (svc *service) List() ([]*domain.Product, error) {
-	products, err := svc.productRepo.List()
+func (svc *service) List(page, limit int64) ([]*domain.Product, error) {
+	products, err := svc.productRepo.List(page, limit)
 	if err != nil {
 		return nil, err
 	}
 	return products, nil
+}
+func (svc *service) Count() (int64, error) {
+	count, err := svc.productRepo.Count()
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 func (svc *service) Update(product domain.Product) (*domain.Product, error) {
 	pro, err := svc.productRepo.Update(product)
