@@ -41,19 +41,19 @@ func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 
 	wg.Add(1)
 	go func() {
-		defer wg.Add(-1)
+		defer wg.Done()
 		count, _ := h.svc.Count()
 		cnt = count
 	}()
 	wg.Add(1)
 	go func() {
-		defer wg.Add(-1)
+		defer wg.Done()
 		count, _ := h.svc.Count()
 		cnt = count
 	}()
 	wg.Add(1)
 	go func() {
-		defer wg.Add(-1)
+		defer wg.Done()
 		count, _ := h.svc.Count()
 		cnt = count
 	}()
