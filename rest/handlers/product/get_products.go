@@ -35,7 +35,20 @@ func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	count, _ := h.svc.Count()
+	var cnt int64
+	go func() {  //Estimate time 7 Secound
+		count, _ := h.svc.Count()
+		cnt = count
+	}()
+	go func() {  //Estimate time 7 Secound
+		count, _ := h.svc.Count()
+		cnt = count
+	}()
+	go func() {  //Estimate time 7 Secound
+		count, _ := h.svc.Count()
+		cnt = count
+	}()
+	
 
-	utils.SendPage(w, products, page, limit, count)
+	utils.SendPage(w, products, page, limit, cnt)
 }
