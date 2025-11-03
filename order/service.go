@@ -29,3 +29,10 @@ func (svc *service) Count() (int64, error) {
 	count, _ := svc.orderRepo.Count()
 	return count, nil
 }
+func(svc *service)UpdateOrderStatus(orderID int64, newStatus string) (int64, error){
+	_,err:= svc.orderRepo.UpdateOrderStatus(orderID,newStatus)
+	if err != nil {
+		return 0, err
+	}
+	return 1, nil
+}

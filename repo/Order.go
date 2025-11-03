@@ -62,3 +62,16 @@ func (r *OrderRepo) Count() (int64, error) {
 
 	return count, nil
 }
+func (r *OrderRepo) UpdateOrderStatus(orderID int64, newStatus string) (int64, error) {
+	query := `
+		UPDATE orders
+			SET status = $1,
+    			updated_at = NOW()
+			WHERE id = $2;
+	`
+	_, err := r.db.Exec(query, newStatus, orderID) //it return 0,1
+	if err != nil {
+		return 0, err
+	}
+	return 1, nil
+}
