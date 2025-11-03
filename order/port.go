@@ -11,5 +11,6 @@ type Service interface {
 
 type OrderRepo interface {
 	CreateOrder(newOrder domain.Order) (*domain.Order, error)
-	GetALLOrder() ([]*domain.Order, error)
+	GetALLOrder(page, limit int64) ([]*domain.Order, error)
+	Count() (int64, error)
 }

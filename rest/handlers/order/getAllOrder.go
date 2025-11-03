@@ -3,6 +3,7 @@ package order
 import (
 	"ecommerce/utils"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) GetAllOrder(w http.ResponseWriter, r *http.Request) {
@@ -12,29 +13,29 @@ func (h *Handler) GetAllOrder(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//parse query paramas
-	// query := r.URL.Query()
+	query := r.URL.Query()
 	// // extract page no
-	// pageAsStr := query.Get("page")
-	// //extract data limit
-	// limitAsStr := query.Get("limit")
+	pageAsStr := query.Get("page")
+	//extract data limit
+	limitAsStr := query.Get("limit")
 
 	// //convert string to integer
-	// page, _ := strconv.ParseInt(pageAsStr, 10, 32)
-	// limit, _ := strconv.ParseInt(limitAsStr, 10, 32)
+	page, _ := strconv.ParseInt(pageAsStr, 10, 32)
+	limit, _ := strconv.ParseInt(limitAsStr, 10, 32)
 
-	// if page <= 0 {
-	// 	page = 1
-	// }
-	// if limit <= 0 {
-	// 	limit = 10
-	// }
+	if page <= 0 {
+		page = 1
+	}
+	if limit <= 0 {
+		limit = 10
+	}
 
-	orders, err := h.svc.GetALLOrder()
+	orders, err := h.svc.GetALLOrder(page, limit)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	// utils.SendPage(w, orders, page, limit, cnt)
-	utils.SendData(w, orders, http.StatusOK)
+	cnt, _ := h.svc.Count()
+	utils.SendPage(w, orders, page, limit, cnt)
+	// utils.SendData(w, orders, http.StatusOK)
 }

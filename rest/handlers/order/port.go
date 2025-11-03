@@ -3,6 +3,7 @@ package order
 import "ecommerce/domain"
 
 type Service interface {
-	CreateOrder(newOrder domain.Order)(*domain.Order,error)
-	GetALLOrder()([]*domain.Order,error)
+	CreateOrder(newOrder domain.Order) (*domain.Order, error)
+	Count() (int64, error)
+	GetALLOrder(page, limit int64) ([]*domain.Order, error)
 }

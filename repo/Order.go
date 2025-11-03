@@ -32,19 +32,33 @@ RETURNING id;
 	}
 	return &RequestOrder, nil
 }
-func (r *OrderRepo) GetALLOrder() ([]*domain.Order, error) {
+func (r *OrderRepo) GetALLOrder(page, limit int64) ([]*domain.Order, error) {
 	var orders []*domain.Order
+	offset := ((page - 1) * limit) + 1
 	query := `
-	SELECT 
-    id, product_id, user_id, quantity, total_price, status, created_at, updated_at
-FROM orders
-ORDER BY created_at DESC;
-	`
-	err := r.db.Select(&orders, query)
+    SELECT 
+        id, product_id, user_id, quantity, total_price, status, created_at, updated_at
+    FROM orders
+    ORDER BY created_at DESC
+    LIMIT $1
+    OFFSET $2;
+`
+	err := r.db.Select(&orders, query, limit, offset)
 
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println(err)
 	return orders, nil
+}
+func (r *OrderRepo) Count() (int64, error) {
+	query := `SELECT COUNT(*) FROM orders`
+
+	var count int64
+	err := r.db.QueryRow(query).Scan(&count)
+	if err != nil {
+		return 0, err
+	}
+
+	return count, nil
 }
