@@ -18,3 +18,10 @@ func (svc *service) CreateOrder(newOrder domain.Order) (*domain.Order, error) {
 	}
 	return order, nil
 }
+func (svc *service) GetALLOrder() ([]*domain.Order, error) {
+	orders, err := svc.orderRepo.GetALLOrder()
+	if err != nil {
+		return nil, err
+	}
+	return orders, nil
+}

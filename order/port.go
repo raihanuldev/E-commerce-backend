@@ -11,4 +11,5 @@ type Service interface {
 
 type OrderRepo interface {
 	CreateOrder(newOrder domain.Order) (*domain.Order, error)
+	GetALLOrder() ([]*domain.Order, error)
 }

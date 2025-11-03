@@ -2,6 +2,7 @@ package repo
 
 import (
 	"ecommerce/domain"
+	"fmt"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -30,4 +31,20 @@ RETURNING id;
 		return nil, err
 	}
 	return &RequestOrder, nil
+}
+func (r *OrderRepo) GetALLOrder() ([]*domain.Order, error) {
+	var orders []*domain.Order
+	query := `
+	SELECT 
+    id, product_id, user_id, quantity, total_price, status, created_at, updated_at
+FROM orders
+ORDER BY created_at DESC;
+	`
+	err := r.db.Select(&orders, query)
+
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(err)
+	return orders, nil
 }
