@@ -2,6 +2,7 @@ package rest
 
 import (
 	"ecommerce/config"
+	"ecommerce/rest/handlers/order"
 	"ecommerce/rest/handlers/product"
 	"ecommerce/rest/handlers/user"
 	"ecommerce/rest/middleware"
@@ -15,14 +16,16 @@ type Server struct { //step-1 for routes
 	cnf            config.Config
 	productHandler product.Handler
 	userHandler    user.Handler
+	orderHandler   order.Handler
 }
 
 // step 2
-func NewServer(productHandler *product.Handler, userHandler *user.Handler,cnf config.Config) *Server {
+func NewServer(productHandler *product.Handler, userHandler *user.Handler, orderHandler *order.Handler, cnf config.Config) *Server {
 	return &Server{
-		cnf:cnf,
+		cnf:            cnf,
 		productHandler: *productHandler,
 		userHandler:    *userHandler,
+		orderHandler:   *orderHandler,
 	}
 }
 
@@ -40,6 +43,7 @@ func (server *Server) Start() {
 	// initRoutes(mux, manager) //step3
 	server.productHandler.RegisterRoutes(mux, manager)
 	server.userHandler.RegisterRoutes(mux, manager)
+	server.orderHandler.RegisterRoutes(mux, manager)
 
 	port := ":" + strconv.Itoa(server.cnf.HttpPort)
 	fmt.Println("Server is running on port, ", port)

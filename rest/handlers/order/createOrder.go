@@ -2,6 +2,7 @@ package order
 
 import (
 	"ecommerce/domain"
+	"ecommerce/utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -23,5 +24,10 @@ func (h *Handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//Database Push
-	
+	order, err := h.svc.CreateOrder(newOrder)
+	if err != nil {
+		http.Error(w, "Error to Place Order", http.StatusInternalServerError)
+	}
+	utils.SendData(w, order, 201)
+
 }

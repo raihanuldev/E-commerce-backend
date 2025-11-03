@@ -18,5 +18,16 @@ func NewOrderRepo(db *sqlx.DB) *OrderRepo {
 }
 
 func (r *OrderRepo) CreateOrder(RequestOrder domain.Order) (*domain.Order, error) {
-	return nil, nil
+
+	query := `
+		INSERT INTO orders (product_id, user_id, quantity, total_price, status, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+RETURNING id;
+	`
+	row := r.db.QueryRow(query, RequestOrder.ProductId, RequestOrder.UserId, RequestOrder.Quantity, RequestOrder.TotalPrice, RequestOrder.Status)
+	err := row.Scan(&RequestOrder.ID)
+	if err != nil {
+		return nil, err
+	}
+	return &RequestOrder, nil
 }

@@ -11,7 +11,10 @@ func NewService(orderRepo OrderRepo) Service {
 		orderRepo: orderRepo,
 	}
 }
-func (svc *service) CreateOrder(newOrder domain.Order) (*domain.Order, error){
-	//call orderRepo Crete Order Reciver function and pass value
-	return nil,nil
+func (svc *service) CreateOrder(newOrder domain.Order) (*domain.Order, error) {
+	order, err := svc.orderRepo.CreateOrder(newOrder)
+	if err != nil {
+		return nil, err
+	}
+	return order, nil
 }
