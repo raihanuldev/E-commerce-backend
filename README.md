@@ -39,3 +39,14 @@ The system implements clean architecture principles with repository pattern, mod
   - Each domain (e.g. `user`, `product`) has its own model and service
 
 ---
+## ⚙️ Concurrency Handling
+The application leverages **Go’s goroutines** to run multiple operations concurrently — improving performance and responsiveness.  
+Every concurrent routine is controlled using **sync.WaitGroup**, ensuring that all goroutines complete safely before the main process exits.  
+
+This approach helps the system efficiently handle:
+- Multiple user requests at the same time  
+- Parallel data fetching or processing tasks  
+- Resource-intensive background operations  
+
+---
+
