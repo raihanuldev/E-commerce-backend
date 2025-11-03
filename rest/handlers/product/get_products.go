@@ -4,6 +4,7 @@ import (
 	"ecommerce/utils"
 	"net/http"
 	"strconv"
+	"sync"
 )
 
 func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
@@ -36,19 +37,26 @@ func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var cnt int64
-	go func() {  //Estimate time 7 Secound
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Add(-1)
 		count, _ := h.svc.Count()
 		cnt = count
 	}()
-	go func() {  //Estimate time 7 Secound
+	wg.Add(1)
+	go func() {
+		defer wg.Add(-1)
 		count, _ := h.svc.Count()
 		cnt = count
 	}()
-	go func() {  //Estimate time 7 Secound
+	wg.Add(1)
+	go func() {
+		defer wg.Add(-1)
 		count, _ := h.svc.Count()
 		cnt = count
 	}()
-	
 
 	utils.SendPage(w, products, page, limit, cnt)
 }
