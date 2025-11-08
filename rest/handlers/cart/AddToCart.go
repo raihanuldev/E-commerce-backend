@@ -29,6 +29,7 @@ func (h *Handler) AddToCart(w http.ResponseWriter, r *http.Request) {
 
 	order, err := h.svc.AddToCart(newItem, int64(usrID))
 	if err != nil {
+		fmt.Println(err)
 		http.Error(w, "Error to Add Cart", http.StatusInternalServerError)
 	}
 	utils.SendData(w, order, 201)
