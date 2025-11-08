@@ -1,4 +1,4 @@
-package cart
+package carts
 
 import (
 	"ecommerce/domain"
@@ -10,7 +10,7 @@ type Service interface {
 }
 
 type CartRepo interface {
-	AddToCart(newProduct domain.CartItem) (*domain.Cart, error)
+	AddToCart(newProduct domain.CartItem,userId int64) (*domain.Cart, error)
 	GetUserCart(userId int64) (*domain.Cart, error)
 }
 

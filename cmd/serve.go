@@ -6,11 +6,13 @@ import (
 	productService "ecommerce/product"
 	orderService "ecommerce/order"
 	usrService "ecommerce/user"
+	cartService "ecommerce/carts"
 	"ecommerce/repo"
 	"ecommerce/rest"
 	prodcutHandler "ecommerce/rest/handlers/product"
 	usrhandler "ecommerce/rest/handlers/user"
 	orderHandler "ecommerce/rest/handlers/order"
+	cartHandler "ecommerce/rest/handlers/cart"
 	"ecommerce/rest/middleware"
 	"fmt"
 	"os"
@@ -35,6 +37,7 @@ func Serve() {
 	productRepo := repo.NewProductRepo(dbConn)
 	userRepo := repo.NewUserRepo(dbConn)
 	orderRepo:= repo.NewOrderRepo(dbConn)
+	cartRepo:= repo.NewCartRepo(dbConn)
 
 	middilwares := middleware.NewMiddleware(cnf)
 
@@ -42,12 +45,13 @@ func Serve() {
 	usrServices := usrService.NewService(userRepo)
 	productServices := productService.NewService(productRepo)
 	orderService:= orderService.NewService(orderRepo)
-
+	cartService:= cartService.NewService(cartRepo)
 	//Handlers
 	productHandler := prodcutHandler.NewHandler(middilwares, productServices)
 	orderHandler:= orderHandler.NewHandler(middilwares,orderService)
 	userHandler := usrhandler.NewHandler(usrServices)
-
-	server := rest.NewServer(productHandler, userHandler,orderHandler, *cnf)
+	cartHandler:= cartHandler.NewHandler(middilwares,cartService)
+	
+	server := rest.NewServer(productHandler, userHandler,orderHandler, *cnf,cartHandler)
 	server.Start()
 }

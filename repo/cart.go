@@ -43,23 +43,43 @@ func (r *CartRepo) GetUserCart(userId int64) (*domain.Cart, error) {
 	return &cart, nil
 }
 
-func (r *CartRepo) AddItemToCart(userId, productId int64, quantity int, price float64) (*domain.CartItem, error) {
-	// first ensure cart exists
-	cart, err := r.GetUserCart(userId)
+func (r *CartRepo) AddToCart(newProduct domain.CartItem,userId int64) (*domain.Cart, error) {
+	// Ensure user's cart exists
+	cart, err := r.GetUserCart(userId) //passUSERID
 	if err != nil {
 		return nil, err
 	}
 
-	var item domain.CartItem
 	query := `
-		INSERT INTO cart_items (cart_id, product_id, quantity, price, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6)
-		RETURNING id, cart_id, product_id, quantity, price, created_at, updated_at
-	`
-	err = r.db.Get(&item, query, cart.ID, productId, quantity, price, time.Now(), time.Now())
+        INSERT INTO cart_items (cart_id, product_id, quantity, price, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6)
+    `
+	_, err = r.db.Exec(query, cart.ID, newProduct.ProductID, newProduct.Quantity, newProduct.Price, time.Now(), time.Now())
 	if err != nil {
 		return nil, err
 	}
 
-	return &item, nil
+	// Reload cart with updated items
+	return r.GetUserCart(userId) //userID
 }
+
+// func (r *CartRepo) AddItemToCart(userId, productId int64, quantity int, price float64) (*domain.CartItem, error) {
+// 	// first ensure cart exists
+// 	cart, err := r.GetUserCart(userId)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	var item domain.CartItem
+// 	query := `
+// 		INSERT INTO cart_items (cart_id, product_id, quantity, price, created_at, updated_at)
+// 		VALUES ($1, $2, $3, $4, $5, $6)
+// 		RETURNING id, cart_id, product_id, quantity, price, created_at, updated_at
+// 	`
+// 	err = r.db.Get(&item, query, cart.ID, productId, quantity, price, time.Now(), time.Now())
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	return &item, nil
+// }

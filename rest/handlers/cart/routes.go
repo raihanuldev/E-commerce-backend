@@ -6,5 +6,5 @@ import (
 )
 
 func (h* Handler) RegisterRoutes(mux *http.ServeMux, manager *middleware.Manager) {
-	mux.Handle("POST /order", manager.With(http.HandlerFunc(h.AddToCart)))
+	mux.Handle("POST /cart", manager.With(http.HandlerFunc(h.AddToCart)))
 }
