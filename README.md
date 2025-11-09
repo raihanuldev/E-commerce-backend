@@ -50,12 +50,7 @@ This approach helps the system efficiently handle:
 - Resource-intensive background operations  
 
 ---
-## 📘 API Endpoints
 
-Below are the available API endpoints for the **E-Commerce (GoLang)** project.  
-Each endpoint includes the **method**, **URL**, and **example request body** (if applicable).
-
----
 ## 📘 API Endpoints
 
 Below are the available API endpoints for the **E-Commerce (GoLang)** project.
