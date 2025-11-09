@@ -14,6 +14,7 @@ The system implements clean architecture principles with repository pattern, mod
 - **Authentication:** JWT (JSON Web Token)
 - **Environment Management:** `godotenv`
 - **Dependency Management:** Go Modules
+- **API TESTING:** Postman : https://rihanulislam2015-5709015.postman.co/workspace/Raihanul-Islam-Sharif's-Workspa~0cac0da8-57ea-456f-8ca1-99e74b11def3/collection/49116042-480e509a-b618-4974-a725-1abe8ee09385?action=share&creator=49116042&active-environment=49116042-4bf64501-6b73-4866-845f-0e659a4c8c55
 
 ---
 
