@@ -2,11 +2,18 @@ package product
 
 import (
 	"ecommerce/utils"
+	_"ecommerce/domain" 
 	"net/http"
 	"strconv"
 	"sync"
 )
-
+// @Summary Get all products
+// @Description Retrieve a list of all available products
+// @Tags Products
+// @Produce json
+// @Success 200 {array} domain.Product
+// @Failure 500 {object} map[string]string
+// @Router /products [get]
 func (h *Handler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Please send a GET request", http.StatusBadRequest)

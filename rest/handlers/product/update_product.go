@@ -8,6 +8,17 @@ import (
 	"strconv"
 	"strings"
 )
+// @Summary Update a product
+// @Description Update a product’s details by its ID
+// @Tags Products
+// @Accept json
+// @Produce json
+// @Param id path int true "Product ID"
+// @Param request body domain.Product true "Updated product data"
+// @Success 200 {object} domain.Product
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /products/{id} [put]
 
 func (h *Handler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "PUT" {

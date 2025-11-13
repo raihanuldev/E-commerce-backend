@@ -2,12 +2,22 @@ package product
 
 import (
 	"ecommerce/utils"
+	 _"ecommerce/domain"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 )
 
+// @Summary Get product by ID
+// @Description Retrieve a specific product using its unique ID
+// @Tags Products
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 200 {object} domain.Product
+// @Failure 404 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /products/{id} [get]
 func (h *Handler) GetProductByID(w http.ResponseWriter, r *http.Request) {
 	// Split the path manually
 	parts := strings.Split(r.URL.Path, "/")

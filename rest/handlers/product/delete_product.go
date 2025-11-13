@@ -2,10 +2,19 @@ package product
 
 import (
 	"ecommerce/utils"
+	 _"ecommerce/domain"
 	"net/http"
 	"strconv"
 	"strings"
 )
+// @Summary Delete a product
+// @Description Delete a specific product by its ID
+// @Tags Products
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 204 "Product deleted successfully"
+// @Failure 404 {object} map[string]string
+// @Router /products/{id} [delete]
 
 func (h *Handler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "DELETE" {

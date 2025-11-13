@@ -1,0 +1,79 @@
+basePath: /
+definitions:
+  domain.Product:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      imgUrl:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: rihanulislam2015@gmail.com
+    name: Raihanul Islam Sharif
+    url: https://github.com/raihanuldev
+  description: API documentation for my backend project using net/http
+  termsOfService: http://swagger.io/terms/
+  title: My Go Backend API
+  version: "1.0"
+paths:
+  /products:
+    get:
+      description: Retrieve a list of all available products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Product'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all products
+      tags:
+      - Products
+  /products/{id}:
+    get:
+      description: Retrieve a specific product using its unique ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Product'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get product by ID
+      tags:
+      - Products
+swagger: "2.0"

@@ -8,6 +8,17 @@ import (
 	"net/http"
 )
 
+// @Summary Create a new product
+// @Description Create a product and save it to the database
+// @Tags Products
+// @Accept json
+// @Produce json
+// @Param request body domain.Product true "Product data"
+// @Success 201 {object} domain.Product
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Router /products [post]
+
 // Create Product
 func (h *Handler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 

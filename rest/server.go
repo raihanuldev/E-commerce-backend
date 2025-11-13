@@ -2,6 +2,7 @@ package rest
 
 import (
 	"ecommerce/config"
+
 	"ecommerce/rest/handlers/cart"
 	"ecommerce/rest/handlers/order"
 	"ecommerce/rest/handlers/product"
@@ -11,6 +12,9 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
+	httpSwagger "github.com/swaggo/http-swagger"
+    _ "ecommerce/docs"
 )
 
 type Server struct { //step-1 for routes
@@ -38,6 +42,9 @@ func (server *Server) Start() {
 	mux := http.NewServeMux()
 	// Type one
 	manager.Use(middleware.PreFlight, middleware.Cors, middleware.Logger)
+
+	//Swagger Documentaion
+	mux.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	// Type two
 	// WrapedMux := manager.WrapMux(mux, middleware.Logger, middleware.PreFlight, middleware.Cors)
