@@ -1,5 +1,36 @@
 basePath: /
 definitions:
+  domain.Order:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      productId:
+        type: integer
+      quantity:
+        type: integer
+      status:
+        $ref: '#/definitions/domain.OrderStatus'
+      totalPrice:
+        type: number
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+    type: object
+  domain.OrderStatus:
+    enum:
+    - pending
+    - inProgress
+    - done
+    - canceled
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusInProgress
+    - StatusDone
+    - StatusCanceled
   domain.Product:
     properties:
       description:
@@ -24,6 +55,36 @@ info:
   title: My Go Backend API
   version: "1.0"
 paths:
+  /order:
+    get:
+      description: Retrieve a paginated list of all orders
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Order'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all orders
+      tags:
+      - Orders
   /products:
     get:
       description: Retrieve a list of all available products

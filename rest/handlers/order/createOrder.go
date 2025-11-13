@@ -7,6 +7,16 @@ import (
 	"fmt"
 	"net/http"
 )
+// @Summary Create a new order
+// @Description Create a new order with product ID, user ID, quantity, and status
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Param request body domain.Order true "Order data"
+// @Success 201 {object} domain.Order
+// @Failure 400 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /order [post]
 
 func (h *Handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {

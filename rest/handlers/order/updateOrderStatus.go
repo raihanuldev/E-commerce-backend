@@ -5,7 +5,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	_"ecommerce/domain"
 )
+// @Summary Update order status
+// @Description Update the status of an existing order (e.g., pending → in-progress)
+// @Tags Orders
+// @Accept json
+// @Produce json
+// @Param request body order.reqBody true "Order status update data"
+// @Success 200 {object} domain.Order
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /order [put]
 
 type reqBody struct {
 	OrderID int64  `json:"orderId"`

@@ -3,9 +3,18 @@ package order
 import (
 	"ecommerce/utils"
 	"net/http"
+	_"ecommerce/domain"
 	"strconv"
 )
-
+// @Summary Get all orders
+// @Description Retrieve a paginated list of all orders
+// @Tags Orders
+// @Produce json
+// @Param page query int false "Page number"
+// @Param limit query int false "Limit per page"
+// @Success 200 {array} domain.Order
+// @Failure 500 {object} map[string]string
+// @Router /order [get]
 func (h *Handler) GetAllOrder(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, "Please send a GET request", http.StatusBadRequest)
